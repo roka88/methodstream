@@ -27,6 +27,7 @@ dependencies {
 
 #Version
 <pre>
+0.0.2 관련 클래스 캡슐화 및 run() 연속 실행 시 생기는 오류 해결
 0.0.1 초기버전
 </pre>
 

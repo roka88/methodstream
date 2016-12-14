@@ -1,5 +1,7 @@
 package com.roka.rokamethodstream;
 
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -13,12 +15,14 @@ import java.util.concurrent.Executors;
  */
 
 public class RokaMethodStream {
-    private static HashMap<Object, Object> map = new HashMap();
+    private static HashMap<Object, PerentInterface> map = new HashMap();
     private static RokaMethodStream mHelper;
 
 
     private ExtendHandler mExtendHandler;
     private Executor mExecutor = Executors.newFixedThreadPool(2);
+
+
 
     private RokaMethodStream() {
     }
@@ -30,7 +34,7 @@ public class RokaMethodStream {
         return mHelper;
     }
 
-    public RokaMethodStream attach(@NonNull Object method, @NonNull Object key) {
+    public RokaMethodStream attach(@NonNull PerentInterface method, @NonNull Object key) {
         map.put(key, method);
         return this;
     }
@@ -38,15 +42,15 @@ public class RokaMethodStream {
     public RokaMethodStream detach(Object key) {
         map.remove(key);
         return this;
-
-
     }
 
     public RokaMethodStream run(final Object data, @NonNull Object key) {
-        final Object tempObj = map.get(key);
-        if (tempObj != null) {
-            mExtendHandler = ExtendHandler.init(tempObj);
+        if (mExtendHandler == null) {
+            mExtendHandler = new ExtendHandler();
+        }
 
+        final PerentInterface tempObj = map.get(key);
+        if (tempObj != null) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -56,7 +60,7 @@ public class RokaMethodStream {
                     } else if (tempObj instanceof Procedure) {
                         message.what = 1;
                     }
-                    message.obj = data;
+                    message.obj = new SendObject(tempObj, data);
                     mExtendHandler.sendMessage(message);
                 }
             };
@@ -85,15 +89,45 @@ public class RokaMethodStream {
     }
 
 
-    public interface Func {
+    public interface Func extends PerentInterface {
         void func(Object data) throws Exception;
     }
 
-    public interface Procedure {
+    public interface Procedure extends PerentInterface {
         void proc() throws Exception;
     }
 
+    private class SendObject {
 
+        public Object method;
+        public Object data;
+
+        public SendObject(Object method, Object data) {
+            this.method = method;
+            this.data = data;
+        }
+    }
+
+    private interface PerentInterface{}
+
+    private class ExtendHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                SendObject tempObject = (SendObject)msg.obj;
+                if (msg.what == 0) {
+                    RokaMethodStream.Func tempFun = (RokaMethodStream.Func)tempObject.method;
+                    tempFun.func(tempObject.data);
+                } else if (msg.what == 1) {
+                    RokaMethodStream.Procedure tempFun = (RokaMethodStream.Procedure)tempObject.method;
+                    tempFun.proc();
+                }
+            } catch (Exception e) {
+                if (BuildConfig.DEBUG) Log.e("ExtendHandler Err", e.toString());
+            }
+
+        }
+    }
 
 }
 
