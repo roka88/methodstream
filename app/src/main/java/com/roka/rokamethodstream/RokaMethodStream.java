@@ -72,7 +72,7 @@ public class RokaMethodStream {
 
     public synchronized RokaMethodStream syncRun(Object data, Object key) {
         try {
-            Object tempObj = map.get(key);
+            final PerentInterface tempObj = map.get(key);
             if (tempObj != null) {
                 if (tempObj instanceof Func && data != null) {
                     Func func = (Func) tempObj;
@@ -83,7 +83,7 @@ public class RokaMethodStream {
                 }
             }
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) Log.e("RokaMethodStream Err", e.toString());
+            Log.e("RokaMethodStream Err", e.toString());
         }
         return this;
     }
@@ -123,7 +123,7 @@ public class RokaMethodStream {
                     tempFun.proc();
                 }
             } catch (Exception e) {
-                if (BuildConfig.DEBUG) Log.e("ExtendHandler Err", e.toString());
+                Log.e("ExtendHandler Err", e.toString());
             }
 
         }
