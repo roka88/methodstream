@@ -21,7 +21,7 @@ repositories {
 
 <pre>
 dependencies {
-    compile 'com.github.roka88:methodstream:0.0.2'
+    compile 'com.github.roka88:methodstream:0.0.3'
 }
 </pre>
 
