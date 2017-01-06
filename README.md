@@ -21,12 +21,13 @@ repositories {
 
 <pre>
 dependencies {
-    compile 'com.github.roka88:methodstream:0.0.2'
+    compile 'com.github.roka88:methodstream:0.0.3'
 }
 </pre>
 
 #Version
 <pre>
+0.0.4 메서드 실행 오류시, 로그 메세지 출력 변경
 0.0.3 메서드 실행 오류시, 로그 안뜨는 문제 해결
 0.0.2 관련 클래스 캡슐화 및 run() 연속 실행 시 생기는 오류 해결
 0.0.1 초기버전

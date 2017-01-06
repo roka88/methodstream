@@ -6,6 +6,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -83,7 +85,10 @@ public class RokaMethodStream {
                 }
             }
         } catch (Exception e) {
-            Log.e("RokaMethodStream Err", e.toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            Log.e("RokaMethodStream Err", sw.toString());
         }
         return this;
     }
@@ -123,9 +128,11 @@ public class RokaMethodStream {
                     tempFun.proc();
                 }
             } catch (Exception e) {
-                Log.e("ExtendHandler Err", e.toString());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                Log.e("ExtendHandler err", sw.toString());
             }
-
         }
     }
 
